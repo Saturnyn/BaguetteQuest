@@ -24,6 +24,7 @@ Game.updatePhases = {
 			//init
 			Game.moune.hide = false;
 			Game.mamie.hide = false;
+			Game.mamie.setAccessories();
 			Game.events = [
 				{ progress: 0.48, execute:Game.addBear, args:[{x:Game.width, y:Game.top + (Game.height-Game.top)*0.1 }] },
 				{ progress: 0.51, execute:Game.showFaceStack, args:['0-1'] }
@@ -51,6 +52,7 @@ Game.updatePhases = {
 		//back for wallet
 		if(!Game.events){
 			Game.mamie.hide = false;
+			Game.mamie.setAccessories();
 			Game.events = [
 				{ progress: 0.18, execute:Game.addBear, args:[{x:-60, y:Game.top + (Game.height-Game.top)*0.1, type:'bear-big' }] },
 				{ progress: 0.21, execute:Game.showFaceStack, args:['1-1'] }
@@ -80,6 +82,7 @@ Game.updatePhases = {
 			//init
 			Game.moune.hide = false;
 			Game.mamie.hide = false;
+			Game.mamie.setAccessories('bag');
 			Game.events = [
 				{ progress: 0.18, execute:Game.addBear, args:[{x:Game.width, y:Game.top + (Game.height-Game.top)*0.1 }] },
 				{ progress: 0.18, execute:Game.addBear, args:[{x:Game.width, y:Game.top + (Game.height-Game.top)*0.1 + 50, type:'bear-big' }] },
@@ -120,8 +123,10 @@ Game.updatePhases = {
 		*/
 	},
 	3 : function(){
+		//back with baguette
 		if(!Game.events){
 			Game.mamie.hide = false;
+			Game.mamie.setAccessories('baguette');
 			Game.events = [
 				{ progress: 0.18, execute:Game.addBear, args:[{x:-40, y:Game.top + (Game.height-Game.top)*0.1, type:'bear-armor' }] },
 				{ progress: 0.21, execute:Game.showFaceStack, args:['3-1'] }
@@ -149,6 +154,7 @@ Game.updatePhases = {
 		//third trip
 		if(!Game.events){
 			Game.mamie.hide = false;
+			Game.mamie.setAccessories();
 			Game.events = [];
 		}
 
@@ -163,9 +169,10 @@ Game.updatePhases = {
 		}
 	},
 	5 : function(){
-		//back home -> stolen baguette
+		//back home back with bag -> stolen baguette
 		if(!Game.events){
 			Game.mamie.hide = false;
+			Game.mamie.setAccessories('bag');
 			Game.events = [];
 		}
 
@@ -183,6 +190,7 @@ Game.updatePhases = {
 		//fourth trip
 		if(!Game.events){
 			Game.mamie.hide = false;
+			Game.mamie.setAccessories();
 			Game.events = [];
 		}
 
@@ -216,6 +224,7 @@ Game.updatePhases = {
 	8 : function(){
 		//fifth trip
 		if(!Game.events){
+			Game.mamie.setAccessories('bag');
 			Game.mamie.hide = false;
 			Game.events = [];
 		}
@@ -233,6 +242,7 @@ Game.updatePhases = {
 	9 : function(){
 		//back home - then end
 		if(!Game.events){
+			Game.mamie.setAccessories('bag');
 			Game.mamie.hide = false;
 			Game.events = [];
 		}
@@ -264,7 +274,7 @@ Game.processPhaseEvents = function(){
 		for(var i=0, len=Game.events.length; i<len; i++){
 			var e = Game.events[i];
 			if(e && Game.progress > e.progress){
-				console.log('Execute event',e,'current progress',Game.progress);
+				//console.log('Execute event',e,'current progress',Game.progress);
 				e.execute.apply(null, e.args);
 				Game.events[i] = null;
 			}

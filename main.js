@@ -44,7 +44,7 @@
 		//load assets
 		var assetsToLoad = [
 			//"assets/ArialBlack32.fnt",
-			"assets/bg.png", "assets/mamie.png",
+			"assets/bg.png", "assets/mamie.png", "assets/mamie-accessories.png",
 			 "assets/moune.png",  "assets/mulan.png",  "assets/brave.png",  "assets/frozen.png",
 			"assets/ours.png",  "assets/ours-big.png",  "assets/ours-armor.png", 
 			"assets/sword.png", "assets/arrow.png", "assets/ice.png", 

@@ -23,7 +23,7 @@ Game.faceStacks = {
 	'0-2' : [
 		[false, 'face-mamie.png', ['Hello, I would like a baguette please.']],
 		[true, 'face-boulangerie.png', ['Of course, that will be 1 euro.']],
-		[false, 'face-mamie.png', ['Silly me !','I forgot my wallet.','I will be back in a minute.']]
+		[false, 'face-mamie.png', ['Silly me !','I forgot my purse.','I will be back in a minute.']]
 	],
 	'1' : [
 		[false, 'face-mamie.png', ['Ah here it is.','Let us go back to the bakery.']]
@@ -45,7 +45,7 @@ Game.faceStacks = {
 	],
 	'3' : [
 		[false, 'face-mamie.png', ['Ha ! Home sweet home.','...']],
-		[false, 'face-mamie.png', ['Damned !','I forgot my wallet at the bakery !', 'Quick let us go back !']],
+		[false, 'face-mamie.png', ['Damned !','I forgot my purse at the bakery !', 'Quick let us go back !']],
 	],
 	'3-1' : [
 		[false, 'face-moune.png', ['That new one is heavily armored.']],
@@ -53,7 +53,7 @@ Game.faceStacks = {
 		[false, 'face-frozen.png', ['Let it gooooo!'], function(){ Game.setMouneSkin('frozen')}]
 	],
 	'4' : [
-		[false, 'face-mamie.png', ['Hello again, I have lost my wallet, have you seen it ?']],
+		[false, 'face-mamie.png', ['Hello again, I have lost my purse, have you seen it ?']],
 		[true, 'face-boulangerie.png', ['Yes here it is.','You have to be careful with this Mamie !']],
 	],
 	'5' : [
@@ -63,22 +63,21 @@ Game.faceStacks = {
 		[false, 'face-mamie.png', ['We have to go back, Moumoune!', 'We have to go back!']]
 	],
 	'6' : [
-		[false, 'face-boulangerie.png', ['Ah Mamie, you are back again.','Hope you didn\'t forget your wallet this time !']],
+		[false, 'face-boulangerie.png', ['Ah Mamie, you are back again.','Hope you didn\'t forget your purse this time !']],
 		[true, 'face-mamie.png', ['...']],
 		[false, 'face-boulangerie.png', ['Oh.']],
 		[true, 'face-mamie.png', ['I will be back in a minute.']]
 	],
 	'7' : [
-		[false, 'face-mamie.png', ['Where did I put this wallet ?','Ah here it is.','Let us go back.']]
+		[false, 'face-mamie.png', ['Where did I put this purse ?','Ah here it is.','Let us go back.']]
 	],
 	'8' : [
 		[false, 'face-mamie.png', ['Hello, again, another baguette please.']],
 		[true, 'face-boulangerie.png', ['Another ?','You ate the first one already ?']],
 		[false, 'face-mamie.png', ['Yes another.','The first one got stolen !']],
 		[true, 'face-boulangerie.png', ['Stolen ?','Are you sure your grand-daughter didn\'t hide it like last time ?']],
-		[false, 'face-mamie.png', ['Oh you are probably right !','What a little scoundrel !','Bye bye.']],
-		[true, 'face-moune.png', ['Sorry Mamie, it won\'t happen again, I promise...']],
-		[false, 'face-mamie.png', ['It\'s okay sweetie, let us go home now.']]
+		[true, 'face-moune.png', ['Ah ah! You fell for it again Mamie !']],
+		[false, 'face-mamie.png', ['...','Let us just go back home now, sweetie.']]
 	],
 	'9' : [
 		[false, 'face-moune.png', ['The epic quest for the baguette thus comes to an end !']],
@@ -88,7 +87,7 @@ Game.faceStacks = {
 
 Game.showFaceStack = function(index){
 	if(!Game.showingFaces){
-		console.log('showFaceStack',index);
+		////console.log('showFaceStack',index);
 		Game.showingFaces = true;
 		Game.faceStackIndex = index;
 		
@@ -145,7 +144,7 @@ Game.updateFace = function(){
 
 
 Game.showFace = function(right, image, texts){
-	console.log('showFace',right, image, texts)
+	////console.log('showFace',right, image, texts)
 	var faceUI = Game.faceUI;
 
 	var margin = 4;

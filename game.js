@@ -1,8 +1,8 @@
 var Game = window.Game = {
-	//quickPhase: 3,
-	stats: true,
+	//quickPhase: 6,
+	//stats: true,
 	disableBears: false,
-	//mamieBoost: 100,
+	//mamieBoost: 800,
 	debug: false,
 	started: false,
 	width : 500,
@@ -18,7 +18,7 @@ Game.startDoor = point(40,Game.top);
 Game.endDoor = point(455,Game.top);
 
 Game.start = function(){
-	console.log('game start');
+	//console.log('game start');
 	Game.started = true;
 	Game.createBackground();
 
@@ -47,30 +47,33 @@ Game.tic = function(){
 	if(window.stats && Game.stats) stats.begin();
 
 
-	var nowTime = Date.now() * 0.001;
-	var dt = nowTime - Game.actualTime;
-	if(Game.showingFaces){
-		Game.updateFace(dt);
+	if(Game.over){
 		Game.render();
 	}else{
-		Game.time += dt;
-		Game.update(dt);
-		Game.render();
+		var nowTime = Date.now() * 0.001;
+		var dt = nowTime - Game.actualTime;
+		if(Game.showingFaces){
+			Game.updateFace(dt);
+			Game.render();
+		}else{
+			Game.time += dt;
+			Game.update(dt);
+			Game.render();
 
-		Game.updatePhase();
-		
+			Game.updatePhase();
+			
 
-		Game.prevPhaseTime = Game.phaseTime;
-		Game.phaseTime += dt;
+			Game.prevPhaseTime = Game.phaseTime;
+			Game.phaseTime += dt;
+		}
+		Game.actualTime = nowTime;
 	}
-	Game.actualTime = nowTime;
 
 	Game.flushKeys();
 
 	if(window.stats && Game.stats) stats.end();
-	if(!Game.over){
-		requestAnimationFrame(Game.tic);
-	}
+	requestAnimationFrame(Game.tic);
+	
 };
 
 
@@ -99,10 +102,27 @@ Game.createBaseEntities = function(){
 		scaredSpeed: 200,
 		rect: rect(Game.startDoor.x, Game.startDoor.y, 23, 10),
 		skin: skin('mamie.png', 12, 45, 40, 60),
-		animMap: { 'walk':[0,1,2] }
+		animMap: { 'walk':[0,1,2], 'scared':[3,4] }
 	};
 	Game.setAnim(Game.mamie, 'walk');
 	Game.addEntity(Game.mamie);
+
+	var bagTexture = new PIXI.Texture(Game.textures['mamie-accessories.png']);
+	bagTexture.setFrame( new PIXI.Rectangle(80,0,40,60));
+	Game.mamieBag = new PIXI.Sprite(bagTexture);
+	Game.mamieBag.visible = false;
+	Game.mamie.sprite.addChild(Game.mamieBag);
+
+	var baguetteTexture = new PIXI.Texture(Game.textures['mamie-accessories.png']);
+	baguetteTexture.setFrame( new PIXI.Rectangle(40,0,40,60));
+	Game.mamieBaguette = new PIXI.Sprite(baguetteTexture);
+	Game.mamieBaguette.visible = false;
+	Game.mamie.sprite.addChild(Game.mamieBaguette);
+
+	Game.mamie.setAccessories = function(accessoryName){
+		Game.mamieBaguette.visible = accessoryName == 'baguette';
+		Game.mamieBag.visible = accessoryName == 'bag';
+	};
 
 	Game.moune = {
 		type: 'moune',
@@ -196,11 +216,11 @@ Game.addBear = function(options){
 
 	var bear = {
 		type: 'bear',
-		scaredSpeed: 300,
-		speed: 40,
+		scaredSpeed: 200,
+		speed: 35,
 		rect: rect(0, 0, 21, 20),
 		skin: skin('ours.png', 10, 40, 40, 60),
-		animMap: { 'walk':[0,1,2] }
+		animMap: { 'walk':[0,1,2], 'scared':[3,4] }
 	};
 	if(options){
 		if(options.type == 'bear-big'){
@@ -210,16 +230,16 @@ Game.addBear = function(options){
 				speed: 30,
 				rect: rect(0, 0, 40, 30),
 				skin: skin('ours-big.png', 0, 30, 40, 60),
-				animMap: { 'walk':[0,1,2] }
+				animMap: { 'walk':[0,1,2], 'scared':[3,4] }
 			};
 		}else if(options.type == 'bear-armor'){
 			bear = {
 				type: 'bear-armor',
 				scaredSpeed: 200,
-				speed: 40,
+				speed: 45,
 				rect: rect(0, 0, 20, 20),
 				skin: skin('ours-armor.png', 10, 40, 40, 60),
-				animMap: { 'walk':[0,1,2,3] }
+				animMap: { 'walk':[0,1,3,2], 'scared':[4,5,6] }
 			};
 		}
 	}
@@ -238,19 +258,19 @@ Game.addBear = function(options){
 			bear.rect.y = Game.top + Math.random() * (Game.height - Game.top);
 			if(Game.mamie.rect.x < Game.width/4){
 				bear.rect.x = Game.width + bear.skin.offsetX;
-				console.log('add bear left',bear.rect);
+				//console.log('add bear left',bear.rect);
 			}else if(Game.mamie.rect.x < 3*Game.width/4){
 				bear.rect.x = Math.random() > 0.5 ? Game.width + bear.skin.offsetX : - bear.skin.width;
-				console.log('add bear middle',bear.rect);
+				//console.log('add bear middle',bear.rect);
 			}else{
 				bear.rect.x = - bear.skin.width;
-				console.log('add bear right',bear.rect);
+				//console.log('add bear right',bear.rect);
 			}
 		}else{
 			//bottom
 			bear.rect.y = Game.height + bear.skin.offsetY;
 			bear.rect.x = Math.random() * (Game.width-bear.rect.width);
-			console.log('add bear bottom',bear.rect);
+			//console.log('add bear bottom',bear.rect);
 		}
 	}
 };
@@ -289,7 +309,7 @@ Game.maintainBearCount = function(count, countBig, countArmor){
 // ---------------------------------------------------------------------------------------------------------------------
 
 Game.update = function(dt){
-	//console.log(Game.time);
+	////console.log(Game.time);
 	//update moune position
 	var dx = 0;
 	var dy = 0;
@@ -343,6 +363,7 @@ Game.update = function(dt){
 					bear.scared = true;
 					bear.scaredDx = Game.moune.right ? 1 : -1;
 					bear.scaredDy = Math.random()-0.5;
+					Game.setAnim(bear, 'scared');
 				}
 			}
 		}
@@ -381,6 +402,7 @@ Game.update = function(dt){
 				bear.scared = true;
 				bear.scaredDx = Game.moune.right ? 1 : -1;
 				bear.scaredDy = 0;
+				Game.setAnim(bear, 'scared');
 			}
 		}
 	}else{
@@ -395,7 +417,10 @@ Game.update = function(dt){
 			Game.moveEntity(Game.mamie, Game.mamie.scaredSpeed * dt, 0);
 		}
 		if(Game.progress <= 0){
-			Game.mamie.scared = false;
+			if(Game.mamie.scared && (!Game.mamie.scaredTime || Game.time > Game.mamie.scaredTime)){
+				Game.mamie.scared = false;
+				Game.setAnim(Game.mamie,'walk');
+			}
 		}
 	}else if(Game.progress<1){
 		if(Game.phase%2 == 0){
@@ -419,7 +444,11 @@ Game.update = function(dt){
 				//Game.moveEntity(bear, bear.speed * dt, 0);
 			}else{
 				if(rectCollide(Game.mamie.rect, bear.rect)){
-					Game.mamie.scared = true;
+					if(!Game.mamie.scared){
+						Game.mamie.scared = true;
+						Game.setAnim(Game.mamie,'scared');
+					}
+					Game.mamie.scaredTime = Game.time + 1;
 				}else{
 					var dist = tempPoint;
 					dist.x = Game.mamie.rect.x - bear.rect.x;
@@ -441,6 +470,7 @@ Game.update = function(dt){
 				bear.scared = true;
 				bear.scaredDx = arrow.right ? 1 : -1;
 				bear.scaredDy = 0;
+				Game.setAnim(bear, 'scared');
 			}
 		}
 		if(arrow.rect.x > Game.width + 100 || arrow.rect.x < -100){
@@ -503,7 +533,11 @@ Game.render = function(){
 		}else{
 			e.sprite.x = e.rect.x + e.rect.width + e.skin.offsetX;
 		}
-		e.sprite.tint = e.scared ? 0xffaaaa : 0xffffff; 
+		if(e.scared && e.type != 'bear-armor'){
+			e.sprite.tint = 0xffaaaa; 
+		}else{
+			e.sprite.tint = 0xffffff;
+		}
 
 		if(e.animName){
 			var frameList = e.animMap[e.animName];
@@ -567,8 +601,3 @@ Game.setAnim = function(e, animName){
 	e.animFrameIndex = 0;
 	e.animFrameCount = 0;
 };
-
-
-
-
-
